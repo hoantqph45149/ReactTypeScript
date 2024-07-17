@@ -1,0 +1,20 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+li,
+ul {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+}
+form {
+  width: 600px;
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin: 50px auto;
+  box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
