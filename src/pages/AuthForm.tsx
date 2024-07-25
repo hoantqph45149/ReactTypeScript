@@ -1,20 +1,19 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import * as z from "zod";
 import { IUser } from "../interface/user";
 import { api } from "../services";
-import { useNavigate } from "react-router-dom";
 
 type Props = {
-  isForm: boolean;
+  isLogin: boolean;
 };
 
-const AuthForm = ({ isForm }: Props) => {
+const AuthForm = ({ isLogin }: Props) => {
   const nav = useNavigate();
   const userSchema = z.object({
-    email: z.string().email("Invalid email"),
-    password: z.string().min(6),
+    email: z.string().email("Email không hợp lệ"),
+    password: z.string().min(6, "Password ít nhất 6 ký tự"),
   });
   const {
     register,
@@ -27,7 +26,7 @@ const AuthForm = ({ isForm }: Props) => {
   const onSubmit = (data: IUser) => {
     (async () => {
       try {
-        if (isForm) {
+        if (isLogin) {
           const res = await api.post("/login", data);
           sessionStorage.setItem("user", JSON.stringify(res.data.accessToken));
           nav("/");
@@ -46,11 +45,13 @@ const AuthForm = ({ isForm }: Props) => {
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <h1 className="text-center mb-3">{isForm ? "Login" : "Register"}</h1>
+        <h1 className="text-center mb-3">{isLogin ? "Login" : "Register"}</h1>
         <div className="mb-3">
           <label>email</label>
           <input className="form-control" {...register("email")} />
-          {errors.email && <p>{errors.email.message}</p>}
+          {errors.email && (
+            <p className="text-danger">{errors.email.message}</p>
+          )}
         </div>
         <div className="mb-3">
           <label>password</label>
@@ -59,7 +60,9 @@ const AuthForm = ({ isForm }: Props) => {
             type="text"
             {...register("password")}
           />
-          {errors.password && <p>{errors.password.message}</p>}
+          {errors.password && (
+            <p className="text-danger">{errors.password.message}</p>
+          )}
         </div>
         <button className="btn btn-primary w-100">Submit</button>
       </form>

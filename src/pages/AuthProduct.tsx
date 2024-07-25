@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
 import * as z from "zod";
 import { IProduct } from "../interface/product";
-import { useParams } from "react-router-dom";
 import { api } from "../services";
 
 type Props = {
@@ -51,7 +51,9 @@ const AuthProduct = ({ ondata }: Props) => {
         <div className="mb-3">
           <label>Title</label>
           <input className="form-control" {...register("title")} />
-          {errors.title && <p>{errors.title.message}</p>}
+          {errors.title && (
+            <p className="text-danger">{errors.title.message}</p>
+          )}
         </div>
         <div className="mb-3">
           <label>Price</label>
@@ -60,12 +62,16 @@ const AuthProduct = ({ ondata }: Props) => {
             type="number"
             {...register("price", { valueAsNumber: true })}
           />
-          {errors.price && <p>{errors.price.message}</p>}
+          {errors.price && (
+            <p className="text-danger">{errors.price.message}</p>
+          )}
         </div>
         <div className="mb-3">
           <label>Description</label>
           <input className="form-control" {...register("description")} />
-          {errors.description && <p>{errors.description.message}</p>}
+          {errors.description && (
+            <p className="text-danger">{errors.description.message}</p>
+          )}
         </div>
         <button className="btn btn-primary w-100">Submit</button>
       </form>

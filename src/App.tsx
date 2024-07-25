@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import "./App.css";
-import Home from "./pages/Home";
-import { api } from "./services";
 import { IProduct } from "./interface/product";
-import ProductDetail from "./pages/ProductDetail";
-import AuthProduct from "./pages/AuthProduct";
 import AuthForm from "./pages/AuthForm";
+import AuthProduct from "./pages/AuthProduct";
+import Home from "./pages/Home";
+import ProductDetail from "./pages/ProductDetail";
+import { api } from "./services";
 
 function App() {
   const nav = useNavigate();
@@ -22,7 +22,7 @@ function App() {
   const handleSubmit = async (data: IProduct) => {
     try {
       if (data.id) {
-        const res = await api.put(`/products/${data.id}`, data);
+        await api.patch(`/products/${data.id}`, data);
         const newdata = await api.get("/products");
         setProducts(newdata.data);
         if (
@@ -43,11 +43,26 @@ function App() {
       console.log(error);
     }
   };
-
+  const handleDelete = (id: number) => {
+    (async () => {
+      try {
+        if (confirm("bạn có chắc muốn xóa không ?")) {
+          await api.delete(`/products/${id}`);
+          setProducts(products.filter((product) => product.id !== id));
+          nav("/");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  };
   return (
     <>
       <Routes>
-        <Route path="/" element={<Home products={products} />} />
+        <Route
+          path="/"
+          element={<Home products={products} onDelete={handleDelete} />}
+        />
         <Route path="/detail/:id" element={<ProductDetail />} />
         <Route
           path="/authform"
@@ -57,8 +72,8 @@ function App() {
           path="/authform/:id"
           element={<AuthProduct ondata={handleSubmit} />}
         />
-        <Route path="/login" element={<AuthForm isForm={true} />} />
-        <Route path="/register" element={<AuthForm isForm={false} />} />
+        <Route path="/login" element={<AuthForm isLogin={true} />} />
+        <Route path="/register" element={<AuthForm isLogin={false} />} />
       </Routes>
     </>
   );

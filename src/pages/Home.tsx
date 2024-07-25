@@ -1,12 +1,12 @@
-import React from "react";
-import { IProduct } from "../interface/product";
 import { Link } from "react-router-dom";
+import { IProduct } from "../interface/product";
 
 type Props = {
   products: IProduct[];
+  onDelete: (id: number) => void;
 };
 
-const Home = ({ products }: Props) => {
+const Home = ({ products, onDelete }: Props) => {
   return (
     <>
       <Link to={`/authform`}>
@@ -42,7 +42,12 @@ const Home = ({ products }: Props) => {
                 <Link to={`/authform/${item.id}`}>
                   <button className="btn btn-primary w-100 mb-3">Update</button>
                 </Link>
-                <button className="btn btn-danger w-100">Delete</button>
+                <button
+                  onClick={() => onDelete(Number(item.id))}
+                  className="btn btn-danger w-100"
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           ))}
